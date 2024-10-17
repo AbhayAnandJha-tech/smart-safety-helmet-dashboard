@@ -1,17 +1,137 @@
-.App {
+/* Global body styles */
+body {
+  margin: 0;
+  font-family: "Lato", sans-serif;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  line-height: 1.6;
+}
+
+/* Typography styling */
+h1,
+h2,
+h3 {
+  color: #f5a623;
+  text-transform: uppercase;
+  margin-bottom: 0.5em;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Parallax header */
+.parallax {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjaOr0i9C1Ru9pGxJl3-qcNZO0CEYFdoA39g&s");
+  height: 500px;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
   text-align: center;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.parallax h1 {
+  font-size: 4em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  animation: fadeIn 1.5s ease-in-out;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.parallax p {
+  font-size: 1.5em;
+  margin-top: 10px;
+  color: #ddd;
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* Keyframes for smooth fading in animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button styling */
+button {
+  background-color: #f5a623;
+  color: #1e1e1e;
+  padding: 10px 20px;
+  border: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  border-radius: 8px;
+}
+
+/* Hover effect on button */
+button:hover {
+  background-color: #e59819;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Links hover effect */
+a {
+  color: #03a9f4;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0288d1;
+  text-decoration: underline;
+}
+
+/* App structure styling */
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Enhanced Banner */
+.banner {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjaOr0i9C1Ru9pGxJl3-qcNZO0CEYFdoA39g&s");
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.banner h1 {
+  font-size: 4em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .parallax {
+    height: 300px;
+    background-size: cover;
+  }
+
+  .parallax h1 {
+    font-size: 2.5em;
+  }
+
+  .parallax p {
+    font-size: 1em;
+  }
+
+  .banner h1 {
+    font-size: 2.5em;
+  }
 }

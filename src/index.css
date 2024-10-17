@@ -1,13 +1,118 @@
-body {
+/* Reset some default styles */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Body styling */
+body {
+  font-family: "Lato", sans-serif;
+  background-color: #0d0d0d;
+  color: #f0f0f0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+}
+
+/* General anchor styling */
+a {
+  color: #03a9f4;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+}
+
+a:hover {
+  color: #0288d1;
+}
+
+/* Buttons */
+button {
+  background-color: #f5a623;
+  color: #1e1e1e;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #e59819;
+}
+
+/* Responsive Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Flexbox layout for centering content */
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #1e1e1e;
+}
+
+/* Header styling */
+header {
+  background-color: #1b1b1b;
+  color: white;
+  padding: 40px 0;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 4em;
+  margin-bottom: 0.5em;
+}
+
+header p {
+  font-size: 1.2em;
+  color: #bbb;
+}
+
+/* Footer styling */
+footer {
+  background-color: #222;
+  color: #777;
+  padding: 20px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+footer a {
+  color: #03a9f4;
+  font-weight: bold;
+}
+
+footer a:hover {
+  color: #0288d1;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+/* Responsive media queries */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 2.5em;
+  }
+  header p {
+    font-size: 1em;
+  }
 }

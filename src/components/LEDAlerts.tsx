@@ -13,11 +13,15 @@ export default function LEDAlerts() {
 
   useEffect(() => {
     const ledStatusRef = ref(db, "status/leds");
+
+    // Subscribe to the LED status updates
     const unsubscribe = onValue(ledStatusRef, (snapshot) => {
       const data = snapshot.val();
-      setLedStatus(data);
+      // Check if data is null and set default values if so
+      setLedStatus(data || { green: false, yellow: false, red: false });
     });
 
+    // Cleanup function to unsubscribe from the listener
     return () => unsubscribe();
   }, []);
 

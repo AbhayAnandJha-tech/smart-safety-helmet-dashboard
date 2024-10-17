@@ -1,0 +1,146 @@
+/* General Dashboard Layout */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+.dashboard-header {
+  text-align: center;
+  color: #f5a623;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+/* Grid Layout for Sensors */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Paper/Card for Each Sensor Section */
+.sensor-card {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.sensor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Typography for Card Titles */
+.sensor-title {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+  color: #f5a623;
+}
+
+/* Sensor Data Display */
+.sensor-data {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #fff;
+}
+
+.sensor-data.error {
+  color: #ff5252;
+}
+
+.sensor-data.safe {
+  color: #4caf50;
+}
+
+/* Temperature Chart Section */
+.temperature-chart {
+  margin-top: 20px;
+  height: 150px;
+  background: #2a2a2a;
+  border-radius: 8px;
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Fire Detection Alert */
+.fire-alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+.fire-alert svg {
+  margin-right: 10px;
+}
+
+.fire-alert.active {
+  color: #ff5252;
+}
+
+.fire-alert.safe {
+  color: #4caf50;
+}
+
+/* GPS Map Section */
+.map-container {
+  height: 200px;
+  margin-top: 20px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-placeholder {
+  font-size: 1.2em;
+  color: #aaa;
+}
+
+/* Button Styles */
+.button {
+  background-color: #f5a623;
+  color: #1e1e1e;
+  padding: 10px 20px;
+  border: none;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  margin-top: 20px;
+}
+
+.button:hover {
+  background-color: #e59819;
+  transform: translateY(-2px);
+}
+
+/* Buzzer & LED Status */
+.led-status {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.led-status div {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
