@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box, CircularProgress } from "@mui/material";
+import { Typography, Box, CircularProgress, Paper } from "@mui/material";
+import { Bell } from "lucide-react";
 import { ref, onValue } from "firebase/database";
 import { db } from "../firebase.tsx";
+import "../styles/BuzzerAlerts.css";
 
 export default function BuzzerAlerts() {
   const [buzzerStatus, setBuzzerStatus] = useState({ level: 0, active: false });
@@ -25,24 +27,34 @@ export default function BuzzerAlerts() {
   }, []);
 
   return (
-    <Box>
-      <Typography variant="h6" gutterBottom>
-        Buzzer Alerts
-      </Typography>
-      <Box display="flex" justifyContent="space-around">
+    <Paper elevation={3} className="buzzer-alerts-container">
+      <Box className="buzzer-alerts-header">
+        <Bell size={24} color="#f5a623" />
+        <Typography variant="h5" component="h2">
+          Buzzer Alerts
+        </Typography>
+      </Box>
+      <Box className="buzzer-status">
         <CircularProgress
           variant="determinate"
           value={buzzerStatus.level}
           color={buzzerStatus.active ? "error" : "primary"}
-          size={60}
+          size={80}
+          thickness={5}
+          className="buzzer-progress"
         />
-        <Typography
-          variant="h6"
-          color={buzzerStatus.active ? "error" : "textPrimary"}
-        >
-          {buzzerStatus.active ? "Active" : "Inactive"}
-        </Typography>
+        <Box className="buzzer-info">
+          <Typography
+            variant="h4"
+            className={buzzerStatus.active ? "active" : "inactive"}
+          >
+            {buzzerStatus.active ? "ACTIVE" : "INACTIVE"}
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            Level: {buzzerStatus.level}%
+          </Typography>
+        </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 }

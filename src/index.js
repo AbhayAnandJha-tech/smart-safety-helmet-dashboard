@@ -11,5 +11,5 @@ root.render(
   </React.StrictMode>
 );
 
-// Measuring app performance can help in optimizing the site
+// Measure app performance
 reportWebVitals(console.log);

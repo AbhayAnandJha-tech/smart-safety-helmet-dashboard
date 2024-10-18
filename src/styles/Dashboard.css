@@ -1,0 +1,327 @@
+:root {
+  --primary-color: #ffd700;
+  --secondary-color: #333333;
+  --background-color: #f5f5f5;
+  --card-background: #ffffff;
+  --text-color: #333333;
+  --alert-color: #ff4136;
+}
+
+.mining-dashboard {
+  background-color: var(--background-color);
+  min-height: 100vh;
+  color: var(--text-color);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.dashboard-header {
+  background-color: var(--secondary-color);
+  color: white;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  padding: 1rem 0;
+}
+
+.dashboard-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: var(--primary-color);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.hero {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #e5c100;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.sensor-card,
+.control-card,
+.chart-card {
+  background-color: var(--card-background);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.sensor-card:hover,
+.control-card:hover,
+.chart-card:hover {
+  transform: scale(1.05);
+}
+
+.sensor-header,
+.control-header,
+.chart-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.sensor-icon,
+.control-icon,
+.chart-icon {
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+}
+
+.sensor-value,
+.control-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.alert {
+  color: var(--alert-color);
+}
+
+.chart-container {
+  height: 200px;
+}
+
+.gas-meter,
+.seismic-meter {
+  background-color: #e0e0e0;
+  height: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.gas-level,
+.seismic-bar {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.5s ease-out, transform 0.3s;
+}
+
+.seismic-meter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.seismic-bar {
+  width: 18%;
+  background-color: #e0e0e0;
+}
+
+.seismic-bar.active {
+  background-color: var(--primary-color);
+}
+
+.map-placeholder {
+  background-color: #e0e0e0;
+  height: 150px;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+  margin-top: 1rem;
+}
+
+.control-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 0;
+}
+
+.control-button {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  display: inline-flex;
+  align-items: center;
+}
+
+.control-button:hover {
+  background-color: #e5c100;
+}
+
+.alert-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.emergency {
+  background-color: var(--alert-color);
+  color: white;
+}
+
+.emergency:hover {
+  background-color: #e60000;
+}
+
+.all-clear {
+  background-color: #2ecc40;
+  color: white;
+}
+
+.all-clear:hover {
+  background-color: #29b739;
+}
+
+.key-operations {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 4rem 0;
+}
+
+.key-operations h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.operations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.operation-card {
+  text-align: center;
+}
+
+.operation-icon {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.dashboard-footer {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.footer-links {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .dashboard-header .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    display: none;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  nav.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  nav a {
+    margin: 0.5rem 0;
+  }
+
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .hero {
+    padding-top: 6rem;
+  }
+}
