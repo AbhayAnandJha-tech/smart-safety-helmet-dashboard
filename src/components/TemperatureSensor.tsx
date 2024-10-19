@@ -11,8 +11,14 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { ref, onValue } from "firebase/database";
 import { db } from "../firebase.tsx";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 
 ChartJS.register(
   CategoryScale,
@@ -24,26 +30,77 @@ ChartJS.register(
   Legend
 );
 
+const generateRandomTemperature = () => {
+  return Math.round((Math.random() * 10 + 20) * 10) / 10; // Random temperature between 20°C and 30°C
+};
+
+const generateTimeString = () => {
+  const now = new Date();
+  return now.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+};
+
 export default function TemperatureSensor() {
-  const [temperatureData, setTemperatureData] = useState<
-    { time: string; temp: number }[]
-  >([]);
+  const [temperatureData, setTemperatureData] = useState([
+    { time: "12:00:00", temp: 24.5 },
+    { time: "12:01:00", temp: 25.2 },
+    { time: "12:02:00", temp: 25.7 },
+    { time: "12:03:00", temp: 26.1 },
+    { time: "12:04:00", temp: 25.8 },
+    { time: "12:05:00", temp: 25.3 },
+  ]);
+
+  const [isFirebaseConfigured, setIsFirebaseConfigured] = useState(false);
 
   useEffect(() => {
-    const temperatureRef = ref(db, "temperature");
-    const unsubscribe = onValue(temperatureRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const formattedData = Object.entries(data).map(([time, temp]) => ({
-          time,
-          temp: typeof temp === "number" ? temp : 0,
-        }));
-        setTemperatureData(formattedData.slice(-6)); // Keep only the last 6 readings
-      }
-    });
-
-    return () => unsubscribe();
+    // Check if Firebase is configured
+    if (db) {
+      setIsFirebaseConfigured(true);
+    }
   }, []);
+
+  useEffect(() => {
+    let unsubscribe;
+
+    if (isFirebaseConfigured) {
+      // Firebase logic
+      const tempCollection = collection(db, "temperatures");
+      const q = query(tempCollection, orderBy("timestamp", "desc"), limit(6));
+
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const temperatures = querySnapshot.docs
+          .map((doc) => ({
+            time: new Date(doc.data().timestamp.toDate()).toLocaleTimeString(
+              [],
+              { hour: "2-digit", minute: "2-digit", second: "2-digit" }
+            ),
+            temp: doc.data().temperature,
+          }))
+          .reverse();
+        setTemperatureData(temperatures);
+      });
+    } else {
+      // Fallback to hardcoded data updates
+      const interval = setInterval(() => {
+        setTemperatureData((prevData) => {
+          const newData = [
+            ...prevData.slice(1),
+            { time: generateTimeString(), temp: generateRandomTemperature() },
+          ];
+          return newData;
+        });
+      }, 5000); // Update every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [isFirebaseConfigured]);
 
   const data = {
     labels: temperatureData.map((d) => d.time),
@@ -90,7 +147,8 @@ export default function TemperatureSensor() {
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
-        Temperature Sensor
+        Temperature Sensor{" "}
+        {isFirebaseConfigured ? "(Live Data)" : "(Simulated Data)"}
       </Typography>
       <Line options={options} data={data} />
     </Box>

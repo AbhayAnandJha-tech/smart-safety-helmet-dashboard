@@ -14,26 +14,32 @@ import {
   HardHat,
   Thermometer,
   Wind,
-  MapPin,
   Bell,
   Activity,
   Menu,
   ChevronRight,
-  Layers,
   BarChart2,
+  Shovel,
+  Drill,
+  Truck,
 } from "lucide-react";
 import { listenForSensorData } from "../firebase.tsx";
 import "../styles/Dashboard.css";
+import PathfindingGrid from "./PathfindingVisualizer.tsx";
 
 export default function MiningDashboard() {
   const [temperature, setTemperature] = useState(0);
   const [gasLevel, setGasLevel] = useState(0);
   const [seismicActivity, setSeismicActivity] = useState(0);
-  const [gpsLocation, setGpsLocation] = useState("Unknown");
   const [ventilationStatus, setVentilationStatus] = useState("Normal");
   const [alertStatus, setAlertStatus] = useState("All Clear");
   const [temperatureHistory, setTemperatureHistory] = useState([]);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const [gridSize] = useState<number[]>([8, 8]);
+  const [start] = useState<number[]>([0, 0]);
+  const [goal] = useState<number[]>([7, 7]);
+  const [obstacles] = useState<Set<string>>(new Set(["3,3", "4,4"]));
 
   useEffect(() => {
     const unsubscribeTemperature = listenForSensorData(
@@ -45,7 +51,6 @@ export default function MiningDashboard() {
       "seismic",
       setSeismicActivity
     );
-    const unsubscribeGPS = listenForSensorData("gps", setGpsLocation);
     const unsubscribeVentilation = listenForSensorData(
       "ventilation",
       setVentilationStatus
@@ -56,7 +61,6 @@ export default function MiningDashboard() {
       unsubscribeTemperature();
       unsubscribeGas();
       unsubscribeSeismic();
-      unsubscribeGPS();
       unsubscribeVentilation();
       unsubscribeAlert();
     };
@@ -104,13 +108,22 @@ export default function MiningDashboard() {
       </header>
 
       <main>
-        <section className="hero">
+        <section
+          className="hero"
+          style={{
+            backgroundImage: `url('https://media.istockphoto.com/id/584595162/photo/extraction-of-coal.jpg?s=612x612&w=0&k=20&c=Em0eOABdsdwRttaNVMxJJcLxi9sVeJoyizM-l9uUYWA=')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
           <div className="container">
-            <h2>Mining Operations Dashboard</h2>
-            <p>Real-time insights for optimal performance and safety</p>
-            <a href="#dashboard" className="cta-button">
-              View Dashboard <ChevronRight size={20} className="ml-2" />
-            </a>
+            <div className="hero-content">
+              <h2>Mining Operations Dashboard</h2>
+              <p>Real-time insights for optimal performance and safety</p>
+              <a href="#dashboard" className="cta-button">
+                View Dashboard <ChevronRight size={20} className="ml-2" />
+              </a>
+            </div>
           </div>
         </section>
 
@@ -185,16 +198,16 @@ export default function MiningDashboard() {
               ))}
             </div>
           </div>
-
-          <div className="sensor-card">
-            <div className="sensor-header">
-              <MapPin size={24} className="sensor-icon" />
-              <h3>Mining Team Location</h3>
-            </div>
-            <p className="sensor-value">{gpsLocation}</p>
-            <div className="map-placeholder">Interactive Map</div>
-          </div>
         </section>
+
+        <div className="sensor-card large">
+          <PathfindingGrid
+            gridSize={gridSize}
+            start={start}
+            goal={goal}
+            obstacles={obstacles}
+          />
+        </div>
 
         <section className="control-panel container">
           <div className="control-card">
@@ -261,47 +274,92 @@ export default function MiningDashboard() {
           </div>
         </section>
 
-        <section className="key-operations">
+        <section className="operations">
           <div className="container">
-            <h2>Key Mining Operations</h2>
-            <div className="operations-grid">
-              <div className="operation-card">
-                <Layers size={48} className="operation-icon" />
-                <h3>Excavation</h3>
+            <h2>Mining Operations</h2>
+            <div className="detail-cards">
+              <div className="detail-card">
+                <div className="detail-header">
+                  <Shovel size={32} className="detail-icon" />
+                  <h3>Excavation</h3>
+                </div>
                 <p>
-                  State-of-the-art excavation techniques for efficient mineral
+                  Our advanced excavation techniques ensure efficient and safe
+                  material extraction.
+                </p>
+                <ul>
+                  <li>State-of-the-art machinery</li>
+                  <li>Precision digging algorithms</li>
+                  <li>Real-time geological analysis</li>
+                </ul>
+                <div className="detail-stats">
+                  <div className="stat">
+                    <span className="stat-value">1,500</span>
+                    <span className="stat-label">Tons/Day</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">99.9%</span>
+                    <span className="stat-label">Accuracy</span>
+                  </div>
+                </div>
+              </div>
+              <div className="detail-card">
+                <div className="detail-header">
+                  <Drill size={32} className="detail-icon" />
+                  <h3>Drilling</h3>
+                </div>
+                <p>
+                  High-precision drilling operations for optimal resource
                   extraction.
                 </p>
+                <ul>
+                  <li>Automated drill bit selection</li>
+                  <li>Vibration dampening technology</li>
+                  <li>Continuous core sampling</li>
+                </ul>
+                <div className="detail-stats">
+                  <div className="stat">
+                    <span className="stat-value">500</span>
+                    <span className="stat-label">Meters/Day</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">0.1mm</span>
+                    <span className="stat-label">Precision</span>
+                  </div>
+                </div>
               </div>
-              <div className="operation-card">
-                <HardHat size={48} className="operation-icon" />
-                <h3>Safety Protocols</h3>
+              <div className="detail-card">
+                <div className="detail-header">
+                  <Truck size={32} className="detail-icon" />
+                  <h3>Haulage</h3>
+                </div>
                 <p>
-                  Rigorous safety measures to ensure the well-being of our
-                  mining teams.
+                  Efficient material transport systems to maximize productivity.
                 </p>
-              </div>
-              <div className="operation-card">
-                <BarChart2 size={48} className="operation-icon" />
-                <h3>Production Analytics</h3>
-                <p>
-                  Advanced analytics for optimizing mining operations and
-                  output.
-                </p>
+                <ul>
+                  <li>Autonomous haulage vehicles</li>
+                  <li>Optimized route planning</li>
+                  <li>Real-time load monitoring</li>
+                </ul>
+                <div className="detail-stats">
+                  <div className="stat">
+                    <span className="stat-value">10,000</span>
+                    <span className="stat-label">Tons/Day</span>
+                  </div>
+                  <div className="stat">
+                    <span className="stat-value">98%</span>
+                    <span className="stat-label">Efficiency</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="dashboard-footer">
+      <footer>
         <div className="container">
           <p>&copy; 2024 DeepRock Mining. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Us</a>
-          </div>
         </div>
       </footer>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
-import { db } from "../firebase";
-import "./MiningLocationTracker.css";
+import { db } from "../firebase.tsx";
+import "../styles/MiningLocationTracker.css";
 
 const MiningLocationTracker: React.FC = () => {
   const [position, setPosition] = useState<{ lat: number; lng: number }>({
