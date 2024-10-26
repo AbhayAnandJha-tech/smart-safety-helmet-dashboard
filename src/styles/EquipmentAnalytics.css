@@ -1,0 +1,94 @@
+.equipment-analytics {
+  padding: 2rem;
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+}
+
+.equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.equipment-card {
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.equipment-name {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.equipment-status {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.status-indicator {
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.status-indicator.operational {
+  background-color: var(--success-color);
+}
+
+.status-indicator.maintenance {
+  background-color: var(--warning-color);
+}
+
+.battery-level {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.battery-bar {
+  flex-grow: 1;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  margin: 0 0.5rem;
+  overflow: hidden;
+}
+
+.battery-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+}
+
+.maintenance-due {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.maintenance-due svg {
+  margin-right: 0.5rem;
+  color: var(--warning-color);
+}
+
+.equipment-usage-chart {
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.equipment-usage-chart h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}

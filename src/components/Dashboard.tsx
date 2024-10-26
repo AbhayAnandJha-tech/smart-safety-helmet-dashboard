@@ -1,45 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-} from "recharts";
-import {
-  HardHat,
   Thermometer,
   Wind,
-  Bell,
   Activity,
-  Menu,
-  ChevronRight,
+  Users,
+  HardHat,
+  AlertTriangle,
   BarChart2,
-  Shovel,
-  Drill,
-  Truck,
 } from "lucide-react";
+import { Player } from "@lottiefiles/react-lottie-player";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 import { listenForSensorData } from "../firebase.tsx";
 import "../styles/Dashboard.css";
-import PathfindingGrid from "./PathfindingVisualizer.tsx";
 
-export default function MiningDashboard() {
-  const [temperature, setTemperature] = useState(0);
-  const [gasLevel, setGasLevel] = useState(0);
-  const [seismicActivity, setSeismicActivity] = useState(0);
-  const [ventilationStatus, setVentilationStatus] = useState("Normal");
-  const [alertStatus, setAlertStatus] = useState("All Clear");
-  const [temperatureHistory, setTemperatureHistory] = useState([]);
-  const [menuOpen, setMenuOpen] = useState(false);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-  const [gridSize] = useState<number[]>([8, 8]);
-  const [start] = useState<number[]>([0, 0]);
-  const [goal] = useState<number[]>([7, 7]);
-  const [obstacles] = useState<Set<string>>(new Set(["3,3", "4,4"]));
+const Dashboard: React.FC = () => {
+  const [temperature, setTemperature] = useState<number | null>(null);
+  const [gasLevel, setGasLevel] = useState<number | null>(null);
+  const [seismicActivity, setSeismicActivity] = useState<number | null>(null);
+  const [humidity, setHumidity] = useState<number | null>(null);
+  const [temperatureHistory, setTemperatureHistory] = useState<
+    { time: string; value: number }[]
+  >([]);
 
   useEffect(() => {
     const unsubscribeTemperature = listenForSensorData(
@@ -51,317 +52,210 @@ export default function MiningDashboard() {
       "seismic",
       setSeismicActivity
     );
-    const unsubscribeVentilation = listenForSensorData(
-      "ventilation",
-      setVentilationStatus
-    );
-    const unsubscribeAlert = listenForSensorData("alert", setAlertStatus);
+    const unsubscribeHumidity = listenForSensorData("humidity", setHumidity);
 
     return () => {
       unsubscribeTemperature();
       unsubscribeGas();
       unsubscribeSeismic();
-      unsubscribeVentilation();
-      unsubscribeAlert();
+      unsubscribeHumidity();
     };
   }, []);
 
   useEffect(() => {
-    setTemperatureHistory((prev) =>
-      [
-        ...prev,
-        { time: new Date().toLocaleTimeString(), value: temperature },
-      ].slice(-10)
-    );
+    if (temperature !== null) {
+      setTemperatureHistory((prev) =>
+        [
+          ...prev,
+          { time: new Date().toLocaleTimeString(), value: temperature },
+        ].slice(-10)
+      );
+    }
   }, [temperature]);
 
-  const productionData = [
-    { name: "Jan", production: 4000 },
-    { name: "Feb", production: 3000 },
-    { name: "Mar", production: 5000 },
-    { name: "Apr", production: 4500 },
-    { name: "May", production: 6000 },
-    { name: "Jun", production: 5500 },
-  ];
+  const chartData = {
+    labels: temperatureHistory.map((data) => data.time),
+    datasets: [
+      {
+        label: "Temperature",
+        data: temperatureHistory.map((data) => data.value),
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: "Temperature Trend",
+      },
+    },
+  };
 
   return (
-    <div className="mining-dashboard">
-      <header className="dashboard-header">
-        <div className="container">
-          <div className="logo">
-            <HardHat size={32} className="logo-icon" />
-            <h1>DeepRock Mining</h1>
+    <div className="dashboard">
+      <h1 className="dashboard-title">Mining Operations Dashboard</h1>
+
+      <div className="dashboard-grid">
+        <div className="sensor-card">
+          <div className="sensor-header">
+            <Thermometer size={24} className="sensor-icon" />
+            <h3>Shaft Temperature</h3>
           </div>
-          <nav className={menuOpen ? "active" : ""}>
-            <a href="#overview">Overview</a>
-            <a href="#safety">Safety</a>
-            <a href="#operations">Operations</a>
-            <a href="#reports">Reports</a>
-          </nav>
-          <button
-            className="menu-toggle"
-            onClick={() => setMenuOpen(!menuOpen)}
+          <p
+            className={`sensor-value ${
+              temperature && temperature > 30 ? "alert" : ""
+            }`}
           >
-            <Menu size={24} />
-          </button>
+            {temperature !== null ? temperature.toFixed(1) : "N/A"}°C
+          </p>
+          <div className="chart-container">
+            <Line options={chartOptions} data={chartData} />
+          </div>
         </div>
-      </header>
 
-      <main>
-        <section
-          className="hero"
-          style={{
-            backgroundImage: `url('https://media.istockphoto.com/id/584595162/photo/extraction-of-coal.jpg?s=612x612&w=0&k=20&c=Em0eOABdsdwRttaNVMxJJcLxi9sVeJoyizM-l9uUYWA=')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="container">
-            <div className="hero-content">
-              <h2>Mining Operations Dashboard</h2>
-              <p>Real-time insights for optimal performance and safety</p>
-              <a href="#dashboard" className="cta-button">
-                View Dashboard <ChevronRight size={20} className="ml-2" />
-              </a>
-            </div>
+        <div className="sensor-card">
+          <div className="sensor-header">
+            <Wind size={24} className="sensor-icon" />
+            <h3>Gas Levels</h3>
           </div>
-        </section>
-
-        <section id="dashboard" className="dashboard-grid container">
-          <div className="sensor-card">
-            <div className="sensor-header">
-              <Thermometer size={24} className="sensor-icon" />
-              <h3>Shaft Temperature</h3>
-            </div>
-            <p className={`sensor-value ${temperature > 30 ? "alert" : ""}`}>
-              {temperature}°C
-            </p>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={temperatureHistory}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-                  <XAxis dataKey="time" stroke="#888" />
-                  <YAxis stroke="#888" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#fff",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#FFD700"
-                    fill="#FFD700"
-                    fillOpacity={0.2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+          <p
+            className={`sensor-value ${
+              gasLevel && gasLevel > 50 ? "alert" : ""
+            }`}
+          >
+            {gasLevel !== null ? gasLevel.toFixed(1) : "N/A"} ppm
+          </p>
+          <div className="gas-meter">
+            <div
+              className="gas-level"
+              style={{ width: `${Math.min(gasLevel ?? 0, 100)}%` }}
+            />
           </div>
+        </div>
 
-          <div className="sensor-card">
-            <div className="sensor-header">
-              <Wind size={24} className="sensor-icon" />
-              <h3>Gas Levels</h3>
-            </div>
-            <p className={`sensor-value ${gasLevel > 50 ? "alert" : ""}`}>
-              {gasLevel} ppm
-            </p>
-            <div className="gas-meter">
+        <div className="sensor-card">
+          <div className="sensor-header">
+            <Activity size={24} className="sensor-icon" />
+            <h3>Seismic Activity</h3>
+          </div>
+          <p
+            className={`sensor-value ${
+              seismicActivity && seismicActivity > 4 ? "alert" : ""
+            }`}
+          >
+            {seismicActivity !== null ? seismicActivity.toFixed(2) : "N/A"}{" "}
+            Richter
+          </p>
+          <div className="seismic-meter">
+            {[1, 2, 3, 4, 5].map((level) => (
               <div
-                className="gas-level"
-                style={{ width: `${Math.min(gasLevel, 100)}%` }}
+                key={level}
+                className={`seismic-bar ${
+                  seismicActivity && seismicActivity >= level ? "active" : ""
+                }`}
+                style={{
+                  transform: `scaleY(${
+                    seismicActivity && seismicActivity >= level ? 1 : 0.3
+                  })`,
+                }}
               />
-            </div>
+            ))}
           </div>
+        </div>
 
-          <div className="sensor-card">
-            <div className="sensor-header">
-              <Activity size={24} className="sensor-icon" />
-              <h3>Seismic Activity</h3>
-            </div>
-            <p className={`sensor-value ${seismicActivity > 4 ? "alert" : ""}`}>
-              {seismicActivity} Richter
-            </p>
-            <div className="seismic-meter">
-              {[1, 2, 3, 4, 5].map((level) => (
-                <div
-                  key={level}
-                  className={`seismic-bar ${
-                    seismicActivity >= level ? "active" : ""
-                  }`}
-                  style={{
-                    transform: `scaleY(${seismicActivity >= level ? 1 : 0.3})`,
-                  }}
-                />
-              ))}
-            </div>
+        <div className="sensor-card">
+          <div className="sensor-header">
+            <Wind size={24} className="sensor-icon" />
+            <h3>Humidity</h3>
           </div>
-        </section>
+          <p
+            className={`sensor-value ${
+              humidity && humidity > 70 ? "alert" : ""
+            }`}
+          >
+            {humidity !== null ? humidity.toFixed(1) : "N/A"}%
+          </p>
+          <div className="humidity-meter">
+            <div
+              className="humidity-level"
+              style={{ height: `${Math.min(humidity ?? 0, 100)}%` }}
+            />
+          </div>
+        </div>
+      </div>
 
-        <div className="sensor-card large">
-          <PathfindingGrid
-            gridSize={gridSize}
-            start={start}
-            goal={goal}
-            obstacles={obstacles}
+      <div className="dashboard-section">
+        <h2 className="section-title">
+          <Users size={24} />
+          Worker Status
+        </h2>
+        <div className="worker-grid">
+          {[1, 2, 3].map((worker) => (
+            <div key={worker} className="worker-card slide-in">
+              <div className="worker-header">
+                <HardHat size={24} />
+                <h4>Worker {worker}</h4>
+              </div>
+              <Player
+                autoplay
+                loop
+                src="https://assets3.lottiefiles.com/packages/lf20_UJNc2t.json"
+                style={{ height: "100px", width: "100px" }}
+              />
+              <p>Status: Active</p>
+              <p>Location: Shaft {String.fromCharCode(64 + worker)}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="dashboard-section">
+        <h2 className="section-title">
+          <AlertTriangle size={24} />
+          Recent Alerts
+        </h2>
+        <div className="alert-list">
+          <div className="alert-item warning pulse">
+            <AlertTriangle size={18} />
+            <p>High gas levels detected in Shaft B</p>
+            <span className="alert-time">2 min ago</span>
+          </div>
+          <div className="alert-item danger pulse">
+            <AlertTriangle size={18} />
+            <p>Seismic activity above threshold</p>
+            <span className="alert-time">15 min ago</span>
+          </div>
+          <div className="alert-item info">
+            <AlertTriangle size={18} />
+            <p>Maintenance required for Conveyor B</p>
+            <span className="alert-time">1 hour ago</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="dashboard-section">
+        <h2 className="section-title">
+          <BarChart2 size={24} />
+          Production Overview
+        </h2>
+        <div className="production-chart">
+          <Player
+            autoplay
+            loop
+            src="https://assets9.lottiefiles.com/packages/lf20_xyadoh9h.json"
+            style={{ height: "300px", width: "100%" }}
           />
         </div>
-
-        <section className="control-panel container">
-          <div className="control-card">
-            <div className="control-header">
-              <Wind size={24} className="control-icon" />
-              <h3>Ventilation System</h3>
-            </div>
-            <p
-              className={`control-value ${
-                ventilationStatus !== "Normal" ? "alert" : ""
-              }`}
-            >
-              {ventilationStatus}
-            </p>
-            <button className="control-button">Override Ventilation</button>
-          </div>
-
-          <div className="control-card">
-            <div className="control-header">
-              <Bell size={24} className="control-icon" />
-              <h3>Alert Status</h3>
-            </div>
-            <p
-              className={`control-value ${
-                alertStatus !== "All Clear" ? "alert" : ""
-              }`}
-            >
-              {alertStatus}
-            </p>
-            <div className="alert-controls">
-              <button className="control-button emergency">
-                <Bell size={20} className="mr-2" /> Emergency Evacuation
-              </button>
-              <button className="control-button all-clear">
-                <Bell size={20} className="mr-2" /> Sound All Clear
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="production-chart container">
-          <div className="chart-card">
-            <div className="chart-header">
-              <BarChart2 size={24} className="chart-icon" />
-              <h3>Monthly Production</h3>
-            </div>
-            <div className="chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={productionData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="production"
-                    stroke="#FFD700"
-                    fill="#FFD700"
-                    fillOpacity={0.2}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </section>
-
-        <section className="operations">
-          <div className="container">
-            <h2>Mining Operations</h2>
-            <div className="detail-cards">
-              <div className="detail-card">
-                <div className="detail-header">
-                  <Shovel size={32} className="detail-icon" />
-                  <h3>Excavation</h3>
-                </div>
-                <p>
-                  Our advanced excavation techniques ensure efficient and safe
-                  material extraction.
-                </p>
-                <ul>
-                  <li>State-of-the-art machinery</li>
-                  <li>Precision digging algorithms</li>
-                  <li>Real-time geological analysis</li>
-                </ul>
-                <div className="detail-stats">
-                  <div className="stat">
-                    <span className="stat-value">1,500</span>
-                    <span className="stat-label">Tons/Day</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-value">99.9%</span>
-                    <span className="stat-label">Accuracy</span>
-                  </div>
-                </div>
-              </div>
-              <div className="detail-card">
-                <div className="detail-header">
-                  <Drill size={32} className="detail-icon" />
-                  <h3>Drilling</h3>
-                </div>
-                <p>
-                  High-precision drilling operations for optimal resource
-                  extraction.
-                </p>
-                <ul>
-                  <li>Automated drill bit selection</li>
-                  <li>Vibration dampening technology</li>
-                  <li>Continuous core sampling</li>
-                </ul>
-                <div className="detail-stats">
-                  <div className="stat">
-                    <span className="stat-value">500</span>
-                    <span className="stat-label">Meters/Day</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-value">0.1mm</span>
-                    <span className="stat-label">Precision</span>
-                  </div>
-                </div>
-              </div>
-              <div className="detail-card">
-                <div className="detail-header">
-                  <Truck size={32} className="detail-icon" />
-                  <h3>Haulage</h3>
-                </div>
-                <p>
-                  Efficient material transport systems to maximize productivity.
-                </p>
-                <ul>
-                  <li>Autonomous haulage vehicles</li>
-                  <li>Optimized route planning</li>
-                  <li>Real-time load monitoring</li>
-                </ul>
-                <div className="detail-stats">
-                  <div className="stat">
-                    <span className="stat-value">10,000</span>
-                    <span className="stat-label">Tons/Day</span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-value">98%</span>
-                    <span className="stat-label">Efficiency</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div className="container">
-          <p>&copy; 2024 DeepRock Mining. All rights reserved.</p>
-        </div>
-      </footer>
+      </div>
     </div>
   );
-}
+};
+
+export default Dashboard;
