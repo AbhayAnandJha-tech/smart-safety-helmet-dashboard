@@ -1,0 +1,102 @@
+.data-export {
+  padding: 20px;
+}
+
+.export-container {
+  background: var(--background-secondary);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.date-picker-section {
+  margin: 20px 0;
+  background: var(--background-primary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.export-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 12px 24px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-color-dark);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+button.loading {
+  position: relative;
+  color: transparent;
+}
+
+button.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: button-loading 0.8s linear infinite;
+}
+
+.error-message {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+}
+
+.success-message {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  padding: 12px;
+  border-radius: 6px;
+  margin: 12px 0;
+}
+
+@keyframes button-loading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* DateRangePicker custom styles */
+.rdrCalendarWrapper {
+  background: var(--background-primary);
+  color: var(--text-primary);
+}
+
+.rdrDateDisplayWrapper {
+  background: var(--background-secondary);
+}
+
+.rdrDateDisplay input {
+  color: var(--text-primary);
+}
+
+.rdrDayToday .rdrDayNumber span:after {
+  background: var(--primary-color);
+}

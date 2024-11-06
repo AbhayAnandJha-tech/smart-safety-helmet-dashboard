@@ -1,0 +1,20 @@
+.safety-map {
+  height: 500px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.worker-popup {
+  padding: 1rem;
+}
+
+.worker-popup h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2c3e50;
+}
+
+.worker-popup p {
+  margin: 0.25rem 0;
+  color: #34495e;
+}

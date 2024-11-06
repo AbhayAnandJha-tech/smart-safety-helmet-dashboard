@@ -1,0 +1,22 @@
+:root {
+  /* Primary Colors */
+  --primary: #2196f3;
+  --secondary: #7c4dff;
+  --success: #4caf50;
+  --warning: #ffa000;
+  --danger: #f44336;
+
+  /* Background Colors */
+  --bg-primary: #1e1e1e;
+  --bg-secondary: #2d2d2d;
+  --card-bg: #333333;
+
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+
+  /* Border and Shadow */
+  --border-radius: 12px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
